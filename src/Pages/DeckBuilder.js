@@ -32,7 +32,7 @@ const DeckBuilder = () => {
     }
 
     const addCard = (card) => {
-        context.addToCart({ id: card.id, name: card.name, price: 10, set: card.set, number: card.number })
+        context.addToCart({ id: card.id, name: card.name, price: 10, set: card.set, number: card.number, img: card.imageUrl })
     }
 
     const renderCards = () => {

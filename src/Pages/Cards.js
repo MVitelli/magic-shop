@@ -1,21 +1,17 @@
 import React, { useContext, useEffect, useState } from 'react'
+import { Button, Col, Container, Image, Modal, Row } from 'react-bootstrap';
 import { SiteContext } from '../Context/SiteContext';
-import cardsMock from '../Mock/Cards';
+import cartIcon from '../Images/cartIcon.svg'
 
 const Cards = () => {
     const [cards, setCards] = useState([])
+    const [show, setShow] = useState(false)
     const context = useContext(SiteContext)
-    const COUNT = 20;
     const url = 'https://api.magicthegathering.io/v1/cards'
 
-    // useEffect(() => {
-    //     fetch(url)
-    //         .then(res => res.json())
-    //         .then(data => setCards(data.cards.slice(0, 20)))
-    // }, [])
-
     useEffect(() => {
-        Promise.resolve(cardsMock)
+        fetch(url)
+            .then(res => res.json())
             .then(data => setCards(data.cards.slice(0, 20)))
     }, [])
 
@@ -25,12 +21,55 @@ const Cards = () => {
         })
     }
 
+    const renderCartItems = () => {
+        return context.cart.map(item => {
+            return (
+                <Row style={{ paddingBottom: "0.5em" }}>
+                    <Col>
+                        <Image src={item.img} rounded fluid></Image>
+                    </Col>
+                    <Col>
+                        {item.name}
+                    </Col>
+                    <Col>
+                        {item.price}
+                    </Col>
+                </Row>
+            )
+        });
+    }
+
+    const showSidebar = () => setShow(true)
+    const hideSidebar = () => setShow(false)
+
     return (
         <>
-            {cards.length > 0
-                ? renderCards()
-                : <> No cards</>
-            }
+            <Container>
+                <Image src={cartIcon} alt="Cart icon" onClick={showSidebar}>
+                </Image>
+                {/* {cards.length > 0
+                    ? renderCards()
+                    : <> No cards</>
+                } */}
+            </Container>
+            <Modal dialogClassName="modal_cart" show={show} onHide={hideSidebar}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Cart</Modal.Title>
+                </Modal.Header>
+                <Container style={{ height: "100%", width: "60vh" }} fluid>
+                    <Col>
+                        {renderCartItems()}
+                        <Row>
+                            <Button variant="secondary" onClick={hideSidebar}>
+                                Close
+                            </Button>
+                            <Button variant="primary" onClick={hideSidebar}>
+                                Save Changes
+                            </Button>
+                        </Row>
+                    </Col>
+                </Container>
+            </Modal>
         </>
     )
 }
