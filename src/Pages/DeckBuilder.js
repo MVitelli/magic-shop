@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react'
-import { Button } from 'react-bootstrap';
+import { Button, Container, Image, Row } from 'react-bootstrap';
 import { SiteContext } from '../Context/SiteContext';
 
 const DeckBuilder = () => {
@@ -20,7 +20,15 @@ const DeckBuilder = () => {
             const count = 1;
             return `${count} ${name} (${set}) ${number}`
         });
-        console.log("cards to export: ", { toExport })
+        setExportCards(toExport)
+    }
+
+    const copyToClipboard = async () => {
+        formatCards()
+        const text = exportCards.reduce((acc, expCard) => {
+            return acc.concat(expCard + '\n')
+        }, "")
+        await navigator.clipboard.writeText(text);
     }
 
     const addCard = (card) => {
@@ -29,16 +37,25 @@ const DeckBuilder = () => {
 
     const renderCards = () => {
         return cards.map(card => {
-            return <img src={card.imageUrl} onClick={() => { addCard(card) }}></img >
+            return (
+                <Image src={card.imageUrl} onClick={() => { addCard(card) }} rounded ></Image>
+            )
         })
     }
 
     return (
         <>
-            {renderCards()}
-            <Button onClick={formatCards}>
-                Export
-            </Button>
+            <Container>
+                <Row>
+                    <Button variant="dark" onClick={context.clearCart}>
+                        Clear cart
+                    </Button>
+                    <Button variant="dark" onClick={copyToClipboard}>
+                        Copy deck to clipboard
+                    </Button>
+                </Row>
+                {renderCards()}
+            </Container>
         </>
     )
 }
