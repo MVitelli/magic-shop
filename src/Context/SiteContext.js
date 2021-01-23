@@ -20,29 +20,34 @@ const calculateTotal = (cart) => {
 }
 
 const SiteProvider = (props) => {
-    let state = initialState;
+    // let state = initialState;
+    const [storage, setStorage] = useState(initialState)
+    const [isUpdated, setIsUpdated] = useState(false)
+    const storageState = JSON.parse(window.localStorage.getItem(STORAGE_KEY))
+
     useEffect(() => {
-        if (typeof window !== 'undefined') {
-            window.localStorage.getItem(STORAGE_KEY)
-            if (!storageState) {
-                window.localStorage.setItem(STORAGE_KEY, JSON.stringify(initialState))
-            }
-        }
-    }, [])
+        setIsUpdated(false)
+        if (!storageState)
+            window.localStorage.setItem(STORAGE_KEY, JSON.stringify(initialState))
+        else
+            setStorage(storageState)
+
+    }, [isUpdated])
 
     const setItemQuantity = (item) => {
-        const storageState = JSON.parse(window.localStorage.getItem(STORAGE_KEY))
-        const { cart } = storageState
+        // const storageState = JSON.parse(window.localStorage.getItem(STORAGE_KEY))
+        const { cart } = storage
         const index = cart.findIndex(cartItem => cartItem.id === item.id)
         cart[index].quantity = item.quantity
         window.localStorage.setItem(STORAGE_KEY, JSON.stringify({
             cart, numberOfItemsInCart: cart.length, total: calculateTotal(cart)
         }))
+        setIsUpdated(true)
     }
 
     const addToCart = item => {
-        const storageState = JSON.parse(window.localStorage.getItem(STORAGE_KEY))
-        const { cart } = storageState
+        // const storageState = JSON.parse(window.localStorage.getItem(STORAGE_KEY))
+        const { cart } = storage
         if (cart.length) {
             const index = cart.findIndex(cartItem => cartItem.id === item.id)
             if (index >= Number(0)) {
@@ -60,29 +65,32 @@ const SiteProvider = (props) => {
         window.localStorage.setItem(STORAGE_KEY, JSON.stringify({
             cart, numberOfItemsInCart: cart.length, total: calculateTotal(cart)
         }))
+        setIsUpdated(true)
         toast("Successfully added item to cart!", {
             position: toast.POSITION.TOP_LEFT
         })
     }
 
     const removeFromCart = (item) => {
-        const storageState = JSON.parse(window.localStorage.getItem(STORAGE_KEY))
-        let { cart } = storageState
+        // const storageState = JSON.parse(window.localStorage.getItem(STORAGE_KEY))
+        let { cart } = storage
         cart = cart.filter(c => c.id !== item.id)
 
         window.localStorage.setItem(STORAGE_KEY, JSON.stringify({
             cart, numberOfItemsInCart: cart.length, total: calculateTotal(cart)
         }))
+        setIsUpdated(true)
     }
 
     const clearCart = () => {
         window.localStorage.setItem(STORAGE_KEY, JSON.stringify(initialState))
+        setIsUpdated(true)
     }
 
 
     return (
         <SiteContext.Provider value={{
-            ...state,
+            ...storage,
             addToCart: addToCart,
             clearCart: clearCart,
             removeFromCart: removeFromCart,

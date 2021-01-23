@@ -3,7 +3,7 @@ import { SiteContext } from '../Context/SiteContext';
 import cardsMock from '../Mock/Cards';
 
 const Cards = () => {
-    const [cards, setCards] = useState(cardsMock.cards)
+    const [cards, setCards] = useState([])
     const context = useContext(SiteContext)
     const COUNT = 20;
     const url = 'https://api.magicthegathering.io/v1/cards'
@@ -13,6 +13,11 @@ const Cards = () => {
     //         .then(res => res.json())
     //         .then(data => setCards(data.cards.slice(0, 20)))
     // }, [])
+
+    useEffect(() => {
+        Promise.resolve(cardsMock)
+            .then(data => setCards(data.cards.slice(0, 20)))
+    }, [])
 
     const renderCards = () => {
         return cards.map(card => {
