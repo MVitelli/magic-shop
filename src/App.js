@@ -4,6 +4,7 @@ import Cards from './Pages/Cards';
 import { SiteProvider } from './Context/SiteContext';
 import 'react-toastify/dist/ReactToastify.css'
 import { ToastContainer } from 'react-toastify'
+import DeckBuilder from './Pages/DeckBuilder';
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <SiteProvider>
         <Router>
           <Switch>
+            <Route path="/export" component={DeckBuilder}/>
             <Route path="/cards" component={Cards} />
             <Route path="/" component={Cards} />
           </Switch>
