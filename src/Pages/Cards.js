@@ -17,7 +17,7 @@ const Cards = () => {
 
     const renderCards = () => {
         return cards.map(card => {
-            return <img src={card.imageUrl} onClick={() => { context.addToCart({ id: 1, name: "asd", price: 10 }) }}></img>
+            return <img src={card.imageUrl} onClick={() => { context.addToCart({ id: card.id, name: card.name, imgUrl: card.imageUrl, price: 10 }) }}></img>
         })
     }
 
@@ -26,7 +26,7 @@ const Cards = () => {
             return (
                 <Row style={{ paddingBottom: "0.5em" }}>
                     <Col>
-                        <Image src={item.img} rounded fluid></Image>
+                        <Image src={item.imgUrl} round fluid></Image>
                     </Col>
                     <Col>
                         {item.name}
@@ -47,10 +47,10 @@ const Cards = () => {
             <Container>
                 <Image src={cartIcon} alt="Cart icon" onClick={showSidebar}>
                 </Image>
-                {/* {cards.length > 0
+                {cards.length > 0
                     ? renderCards()
                     : <> No cards</>
-                } */}
+                }
             </Container>
             <Modal dialogClassName="modal_cart" show={show} onHide={hideSidebar}>
                 <Modal.Header closeButton>
@@ -63,8 +63,8 @@ const Cards = () => {
                             <Button variant="secondary" onClick={hideSidebar}>
                                 Close
                             </Button>
-                            <Button variant="primary" onClick={hideSidebar}>
-                                Save Changes
+                            <Button variant="primary" onClick={context.clearCart}>
+                                Clear Cart
                             </Button>
                         </Row>
                     </Col>
