@@ -13,9 +13,10 @@ function App() {
       <SiteProvider>
         <Router>
           <Switch>
-            <Route path="/export" component={DeckBuilder}/>
+            <Route path="/" component={Cards} />
+            <Route path="/export" component={DeckBuilder} />
             <Route path="/cards" component={Cards} />
-            <Route path="/" component={Home} />
+            {/* <Route path="/" component={Home} /> */}
           </Switch>
         </Router>
       </SiteProvider>
