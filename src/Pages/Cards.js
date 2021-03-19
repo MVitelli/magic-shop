@@ -15,7 +15,7 @@ const Cards = () => {
             .then(res => res.json())
             .then(data => {
                 setCards(data.cards.slice(0, 20))
-                setFilteredCards(cards)
+                setFilteredCards(data.cards.slice(0, 20))
             })
     }, [])
 
